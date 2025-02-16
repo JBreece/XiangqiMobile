@@ -10,9 +10,13 @@ libs:
   keyboard: {}
   keyboard.polyfill: {}
   pointer.polyfill: {}
+  tween: {}
 startroom: 72J53816dDNQPr
 contentTypes: []
-actions: []
+actions:
+  - name: Press
+    methods:
+      - code: pointer.Any
 scripts: []
 assets:
   - type: room
@@ -23,7 +27,7 @@ assets:
     gridX: 64
     gridY: 64
     diagonalGrid: false
-    disableGrid: false
+    disableGrid: true
     simulate: true
     width: 1280
     height: 720
@@ -48,10 +52,178 @@ assets:
         scaleX: 1
         scaleY: 1
         repeat: repeat
-    copies: []
+    copies:
+      - x: 576
+        'y': 448
+        opacity: 1
+        tint: 16777215
+        scale:
+          x: 1
+          'y': 1
+        rotation: 0
+        uid: pB9dMj4KGMhd1g
+        exts: {}
+        customProperties: {}
+        bindings: {}
+      - x: 640
+        'y': 640
+        opacity: 1
+        tint: 16777215
+        scale:
+          x: 1
+          'y': 1
+        rotation: 0
+        uid: 8mznD8PRLmRkQg
+        exts: {}
+        customProperties: {}
+        bindings: {}
+      - x: 352.1092372989616
+        'y': 670.2250524499086
+        opacity: 1
+        tint: 16777215
+        scale:
+          x: 1
+          'y': 1
+        rotation: 0
+        uid: 8mznD8PRLmRkQg
+        exts: {}
+        customProperties: {}
+        bindings: {}
+      - x: 399.5713620250375
+        'y': 670.091609525394
+        opacity: 1
+        tint: 16777215
+        scale:
+          x: 1
+          'y': 1
+        rotation: 0
+        uid: 8mznD8PRLmRkQg
+        exts: {}
+        customProperties: {}
+        bindings: {}
+      - x: 444.94968101120355
+        'y': 670.3187836710958
+        opacity: 1
+        tint: 16777215
+        scale:
+          x: 1
+          'y': 1
+        rotation: 0
+        uid: 8mznD8PRLmRkQg
+        exts: {}
+        customProperties: {}
+        bindings: {}
+      - x: 491.3887525260019
+        'y': 670.3187836710958
+        opacity: 1
+        tint: 16777215
+        scale:
+          x: 1
+          'y': 1
+        rotation: 0
+        uid: 8mznD8PRLmRkQg
+        exts: {}
+        customProperties: {}
+        bindings: {}
+      - x: 536.6057922837887
+        'y': 670.3187836710958
+        opacity: 1
+        tint: 16777215
+        scale:
+          x: 1
+          'y': 1
+        rotation: 0
+        uid: 8mznD8PRLmRkQg
+        exts: {}
+        customProperties: {}
+        bindings: {}
+      - x: 585.489030909741
+        'y': 670.3187836710958
+        opacity: 1
+        tint: 16777215
+        scale:
+          x: 1
+          'y': 1
+        rotation: 0
+        uid: 8mznD8PRLmRkQg
+        exts: {}
+        customProperties: {}
+        bindings: {}
+      - x: 636.8164884454134
+        'y': 671.5408672066691
+        opacity: 1
+        tint: 16777215
+        scale:
+          x: 1
+          'y': 1
+        rotation: 0
+        uid: 8mznD8PRLmRkQg
+        exts: {}
+        customProperties: {}
+        bindings: {}
+      - x: 715.0296806066505
+        'y': 666.652533064376
+        opacity: 1
+        tint: 16777215
+        scale:
+          x: 1
+          'y': 1
+        rotation: 0
+        uid: 8mznD8PRLmRkQg
+        exts: {}
+        customProperties: {}
+        bindings: {}
+      - x: 825.0169934143264
+        'y': 670.3187836710958
+        opacity: 1
+        tint: 16777215
+        scale:
+          x: 1
+          'y': 1
+        rotation: 0
+        uid: 8mznD8PRLmRkQg
+        exts: {}
+        customProperties: {}
+        bindings: {}
+      - x: 906.8965398394258
+        'y': 669.0967001355226
+        opacity: 1
+        tint: 16777215
+        scale:
+          x: 1
+          'y': 1
+        rotation: 0
+        uid: 8mznD8PRLmRkQg
+        exts: {}
+        customProperties: {}
+        bindings: {}
+      - x: 789.5766221011562
+        'y': 675.2071178133888
+        opacity: 1
+        tint: 16777215
+        scale:
+          x: 1
+          'y': 1
+        rotation: 0
+        uid: 8mznD8PRLmRkQg
+        exts: {}
+        customProperties: {}
+        bindings: {}
+      - x: 858.0131976163422
+        'y': 670.3187836710958
+        opacity: 1
+        tint: 16777215
+        scale:
+          x: 1
+          'y': 1
+        rotation: 0
+        uid: 8mznD8PRLmRkQg
+        exts: {}
+        customProperties: {}
+        bindings: {}
     tiles: []
     extends: {}
-    lastmod: 1739323408765
+    lastmod: 1739656060716
     events: []
     behaviors: []
     extendTypes: ''
@@ -91,6 +263,426 @@ assets:
     padding: 1
     isBlank: false
     source: /home/joshmint/Downloads/bg_v2.png
+  - type: folder
+    uid: 96M2g2HRj5F8Tq
+    colorClass: act
+    icon: help-circle
+    name: New folder
+    lastmod: 1739649766714
+    entries: []
+  - lastmod: 1739650318634
+    type: texture
+    name: PlaceholderPiece
+    untill: 0
+    grid:
+      - 1
+      - 1
+    axis:
+      - 32
+      - 32
+    marginx: 0
+    marginy: 0
+    imgWidth: 64
+    imgHeight: 64
+    width: 64
+    height: 64
+    offx: 0
+    offy: 0
+    origname: iq7mmNjMWf7P8nQ.png
+    shape: circle
+    left: 32
+    right: 32
+    top: 32
+    bottom: 32
+    uid: q7mmNjMWf7P8nQ
+    padding: 1
+    isBlank: false
+    r: 32
+  - type: template
+    baseClass: AnimatedSprite
+    name: Soldier
+    depth: 0
+    texture: q7mmNjMWf7P8nQ
+    playAnimationOnStart: false
+    loopAnimation: true
+    animationFPS: 30
+    visible: true
+    events:
+      - eventKey: OnStep
+        lib: core
+        code: //this.move();
+        arguments: {}
+    extends:
+      cgroup: ''
+      isMovable: true
+    lastmod: 1739650484093
+    uid: pB9dMj4KGMhd1g
+    behaviors:
+      - JqHFML71qbCHt3
+    extendTypes: ''
+  - type: behavior
+    name: MovablePiece
+    behaviorType: template
+    events:
+      - eventKey: OnCreate
+        code: this.dragging = false;
+        arguments: {}
+        lib: core
+      - eventKey: OnStep
+        code: |-
+          // Prevent execution when the tile is locked
+          // (when the victory animation starts playing)
+          if (!this.locked) {
+              // Perform movement if dragging is in process
+              if (this.dragging) {
+                  // We will record whether a tile touched other objects here
+                  var collisionResult;
+
+                  // NEW movement
+                  var targetY = pointer.y - this.relativeY;
+                  var targetX = pointer.x - this.relativeX;
+                  collisionResult = place.moveByAxes(this, targetX - this.x, targetY - this.y, 'Solid');
+
+                  // Check whether we collided with something
+                  // recording the previous collider
+                  // to play sounds on impact.
+                  if (collisionResult) {
+                      if (collisionResult) {
+                          if (this.previousCollider !== collisionResult) {
+                              sounds.play('Wood_End');
+                              this.previousCollider = collisionResult;
+                          }
+                      }
+                  } else {
+                      this.previousCollider = false;
+                  }
+
+          // OLD movement, removed from this project but parts taken out
+          /*
+                  // For vertical tiles…
+                  if (this.isVertical) {
+                      var targetY = pointer.y - this.relativeY;
+                      // We need place.moveByAxes to prevent tiles from teleporting over other objects,
+                      // and also to provide pixel-perfect collisions.
+                      collisionResult = place.moveByAxes(this, 0, targetY - this.y, 'Solid');
+                  } else {
+                      // For horizontal tiles…
+                      var targetX = pointer.x - this.relativeX;
+                      collisionResult = place.moveByAxes(this, targetX - this.x, 0, 'Solid');
+                  }
+
+                  // Check whether we collided with something
+                  // recording the previous collider
+                  // to play sounds on impact.
+                  if (collisionResult) {
+                      if (this.isVertical) {
+                          if (collisionResult.y) {
+                              if (this.previousCollider !== collisionResult.y) {
+                                  sounds.play('Wood_End');
+                                  this.previousCollider = collisionResult.y;
+                              }
+                          }
+                      } else {
+                          if (collisionResult.x) {
+                              if (this.previousCollider !== collisionResult.x) {
+                                  sounds.play('Wood_End');
+                                  this.previousCollider = collisionResult.x;
+                              }
+                          }
+                      }
+                  } else {
+                      this.previousCollider = false;
+                  }
+          */
+              }
+          }
+        arguments: {}
+        lib: core
+      - eventKey: OnPointerDown
+        code: |
+          if (this.isMovable) {
+              // Start dragging when a user presses this tile
+              this.dragging = true;
+              sounds.play('Wood_Start');
+              // Record relative position to the mouse to avoid jittery snapping to tile's center
+              this.relativeX = pointer.x - this.x;
+              this.relativeY = pointer.y - this.y;
+          }
+        arguments: {}
+        lib: core
+      - eventKey: OnPointerUp
+        code: |-
+          // Prevent execution when the tile is locked
+          // (when the victory animation starts playing)
+          if (!this.locked) {
+              // Cancel dragging on release, even if the event occured outside this tile
+              this.dragging = false;
+              // Check if we need to snap to the grid.
+              if (this.x !== this.x % 64 ||
+                  this.y !== this.y % 64
+              ) {
+                  // Smoothly move to snap to the grid
+                  tween.add({
+                      obj: this,
+                      fields: {
+                          x: Math.round(this.x / 64) * 64,
+                          y: Math.round(this.y / 64) * 64
+                      },
+                      duration: 250,
+                      silent: true
+                  });
+              }
+          }
+        arguments: {}
+        lib: core
+      - eventKey: OnPointerUpOutside
+        code: |-
+          // Prevent execution when the tile is locked
+          // (when the victory animation starts playing)
+          if (!this.locked) {
+              // Cancel dragging on release, even if the event occured outside this tile
+              this.dragging = false;
+              // Check if we need to snap to the grid.
+              if (this.x !== this.x % 64 ||
+                  this.y !== this.y % 64
+              ) {
+                  // Smoothly move to snap to the grid
+                  tween.add({
+                      obj: this,
+                      fields: {
+                          x: Math.round(this.x / 64) * 64,
+                          y: Math.round(this.y / 64) * 64
+                      },
+                      duration: 250,
+                      silent: true
+                  });
+              }
+          }
+        arguments: {}
+        lib: core
+    specification:
+      - structure: atomic
+        type: checkbox
+        mappedType: number
+        name: isMovable
+        readableName: Users can move this tile
+        required: false
+        fixedLength: 0
+    extendTypes: ''
+    lastmod: 1739656110302
+    uid: JqHFML71qbCHt3
+  - name: Wood_Start
+    uid: RNjrjT8cTNLzFL
+    type: sound
+    lastmod: 1739651100686
+    preload: true
+    variants:
+      - uid: hMp2kDRgjBRhNN
+        source: >-
+          /home/joshmint/Downloads/.cache/linux64/package.nw/bundledAssets/sounds/Kenney's
+          RPG Sounds/Chop.mp3
+    distortion:
+      enabled: false
+      min: 0
+      max: 1
+    pitch:
+      enabled: false
+      min: 0
+      max: 1
+    reverb:
+      enabled: false
+      decayMin: 2
+      decayMax: 2
+      secondsMin: 2
+      secondsMax: 3
+      reverse: false
+    volume:
+      enabled: false
+      min: 0
+      max: 1
+    eq:
+      enabled: false
+      bands:
+        - min: -1
+          max: 1
+        - min: -1
+          max: 1
+        - min: -1
+          max: 1
+        - min: -1
+          max: 1
+        - min: -1
+          max: 1
+        - min: -1
+          max: 1
+        - min: -1
+          max: 1
+        - min: -1
+          max: 1
+        - min: -1
+          max: 1
+        - min: -1
+          max: 1
+    panning:
+      refDistance: 0.5
+      rolloffFactor: 1
+  - name: Wood_End
+    uid: tt8RPGqBnhRmpp
+    type: sound
+    lastmod: 1739651168993
+    preload: true
+    variants:
+      - uid: 886D12mjKN5QCj
+        source: >-
+          /home/joshmint/Downloads/.cache/linux64/package.nw/bundledAssets/sounds/Kenney's
+          RPG Sounds/BookClose.mp3
+    distortion:
+      enabled: false
+      min: 0
+      max: 1
+    pitch:
+      enabled: false
+      min: 0
+      max: 1
+    reverb:
+      enabled: false
+      decayMin: 2
+      decayMax: 2
+      secondsMin: 2
+      secondsMax: 3
+      reverse: false
+    volume:
+      enabled: false
+      min: 0
+      max: 0.35
+    eq:
+      enabled: false
+      bands:
+        - min: -1
+          max: 1
+        - min: -1
+          max: 1
+        - min: -1
+          max: 1
+        - min: -1
+          max: 1
+        - min: -1
+          max: 1
+        - min: -1
+          max: 1
+        - min: -1
+          max: 1
+        - min: -1
+          max: 1
+        - min: -1
+          max: 1
+        - min: -1
+          max: 1
+    panning:
+      refDistance: 0.5
+      rolloffFactor: 1
+  - lastmod: 1739655779992
+    type: texture
+    name: Wall_Vertical
+    untill: 0
+    grid:
+      - 1
+      - 1
+    axis:
+      - 4
+      - 24
+    marginx: 0
+    marginy: 0
+    imgWidth: 352
+    imgHeight: 176
+    width: 9
+    height: 48
+    offx: 0
+    offy: 64
+    origname: iTPFkJW6Ngk473b.png
+    shape: rect
+    left: 4
+    right: 5
+    top: 24
+    bottom: 24
+    uid: TPFkJW6Ngk473b
+    padding: 1
+    isBlank: false
+    source: >-
+      /home/joshmint/Downloads/.cache/linux64/package.nw/bundledAssets/textures/Pixel
+      Adventure/Tiles_Terrain.png
+    r: 5
+  - type: template
+    baseClass: AnimatedSprite
+    name: Wall_Vertical
+    depth: 0
+    texture: TPFkJW6Ngk473b
+    playAnimationOnStart: false
+    loopAnimation: true
+    animationFPS: 30
+    visible: true
+    events:
+      - eventKey: OnCreate
+        code: ''
+        arguments: {}
+        lib: core
+    extends:
+      cgroup: Solid
+    lastmod: 1739655743742
+    uid: gDjFTtP38C139j
+    behaviors: []
+    extendTypes: ''
+  - lastmod: 1739655912244
+    type: texture
+    name: Wall_Horizontal
+    untill: 0
+    grid:
+      - 1
+      - 1
+    axis:
+      - 25
+      - 5
+    marginx: 0
+    marginy: 0
+    imgWidth: 352
+    imgHeight: 176
+    width: 50
+    height: 10
+    offx: 0
+    offy: 103
+    origname: i8fpRFM6dGdT6pH.png
+    shape: rect
+    left: 25
+    right: 25
+    top: 5
+    bottom: 5
+    uid: 8fpRFM6dGdT6pH
+    padding: 1
+    isBlank: false
+    source: >-
+      /home/joshmint/Downloads/.cache/linux64/package.nw/bundledAssets/textures/Pixel
+      Adventure/Tiles_Terrain.png
+    r: 5
+  - type: template
+    baseClass: AnimatedSprite
+    name: Wall_Horizontal
+    depth: 0
+    texture: 8fpRFM6dGdT6pH
+    playAnimationOnStart: false
+    loopAnimation: true
+    animationFPS: 30
+    visible: true
+    events:
+      - eventKey: OnCreate
+        code: ''
+        arguments: {}
+        lib: core
+    extends:
+      cgroup: Solid
+    lastmod: 1739655940467
+    uid: 8mznD8PRLmRkQg
+    behaviors: []
+    extendTypes: ''
 globalVars: []
 settings:
   authoring:
@@ -145,3 +737,4 @@ settings:
     alternativeLogo: false
     customLoadingText: ''
   fps: 30
+palette: []
