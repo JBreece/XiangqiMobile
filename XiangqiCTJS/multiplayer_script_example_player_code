@@ -1,0 +1,5 @@
+// OP CODES
+// 1 = moving the player
+
+let data = { 'x': this.x, 'y': this.y }
+Nakama.socket.sendMatchState(matchID, 1, data);

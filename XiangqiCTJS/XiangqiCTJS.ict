@@ -11,13 +11,91 @@ libs:
   keyboard.polyfill: {}
   pointer.polyfill: {}
   tween: {}
+  ct.nakama_0.0.2:
+    clientHost: 127.0.0.1
+    clientPort: 7350
+    useSSL: false
+    debugMode: true
 startroom: 72J53816dDNQPr
 contentTypes: []
 actions:
   - name: Press
     methods:
       - code: pointer.Any
-scripts: []
+scripts:
+  - name: multiplayer_global
+    code: >
+      /* Use scripts to define frequent functions and import small libraries
+      */let connectedPlayers = {};
+
+      window.connectedPlayers = connectedPlayers;
+
+      let matchID;
+
+      window.matchID = matchID;
+
+
+      function spawnPlayers(players) {
+          players.forEach(player => {
+              if (player.user_id != Nakama.session.user_id) {
+                  connectedPlayers[player.user_id] = templates.copy("otherPlayer", 200, 200);
+              }
+          });
+      }
+
+
+      function movePlayer(user_id, player_data) {
+          connectedPlayers[user_id].x = player_data.x;
+          connectedPlayers[user_id].y = player_data.y;
+      }
+
+
+      async function createMatch() {
+          enableListeners();
+          let response = await Nakama.socket.createMatch();
+          console.log("Match ID: ", response.match_id);
+          matchID = response.match_id;
+      }
+
+
+      async function joinMatch(match_id) {
+          enableListeners();
+          let match = await Nakama.socket.joinMatch(match_id);
+          spawnPlayers(match.presences);
+          matchID = match_id;
+      }
+
+
+      async function enableListeners() {
+          Nakama.socket.onmatchdata = (result) => {
+              switch (result.op_code) {
+                  case 1:
+                      movePlayer(result.presence.user_id, result.data);
+                      break;
+                  default:
+                      console.log("Invalid OP code");
+              }
+          };
+
+          Nakama.socket.onmatchpresence = (players) => {
+              if (players.joins) {
+                  spawnPlayers(players.joins);
+              }
+          };
+      }
+
+
+      // Make everything globally accessible
+
+      window.createMatch = createMatch;
+
+      window.joinMatch = joinMatch;
+
+      window.enableListeners = enableListeners;
+
+      window.movePlayer = movePlayer;
+
+      window.spawnPlayers = spawnPlayers;
 assets:
   - type: room
     oncreate: ''
@@ -394,6 +472,13 @@ assets:
                       this.previousCollider = false;
                   }
           */
+
+                  // Nakama multiplayer piece
+                  let data = { 'x': this.x, 'y': this.y };
+                  if (matchID) {
+                      Nakama.socket.sendMatchState(matchID, 1, data);
+                  }
+
               }
           }
         arguments: {}
@@ -469,7 +554,7 @@ assets:
         required: false
         fixedLength: 0
     extendTypes: ''
-    lastmod: 1739656110302
+    lastmod: 1758937203545
     uid: JqHFML71qbCHt3
   - name: Wood_Start
     uid: RNjrjT8cTNLzFL
