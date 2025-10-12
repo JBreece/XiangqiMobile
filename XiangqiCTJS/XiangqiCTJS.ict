@@ -12,7 +12,7 @@ libs:
   pointer.polyfill: {}
   tween: {}
   ct.nakama_0.0.2:
-    clientHost: 127.0.0.1
+    clientHost: 192.168.1.208
     clientPort: 7350
     useSSL: false
     debugMode: true
@@ -55,6 +55,7 @@ scripts:
           let response = await Nakama.socket.createMatch();
           console.log("Match ID: ", response.match_id);
           matchID = response.match_id;
+          console.log(`Playing as ${window.playerSide}`);
       }
 
 
@@ -83,6 +84,7 @@ scripts:
               }
           };
       }
+
 
 
       // Make everything globally accessible
@@ -301,18 +303,72 @@ assets:
         bindings: {}
     tiles: []
     extends: {}
-    lastmod: 1739656060716
-    events: []
+    lastmod: 1760303908338
+    events:
+      - eventKey: OnRoomStart
+        code: |
+          let createRed = templates.copy("UIButton", 300, 200);
+          createRed.text = "Create Match (Red)";
+          createRed.action = async () => {
+              window.playerSide = "red";
+              await createMatch();
+              destroyMenuButtons();
+          };
+
+          let createBlack = templates.copy("UIButton", 300, 280);
+          createBlack.text = "Create Match (Black)";
+          createBlack.action = async () => {
+              window.playerSide = "black";
+              await createMatch();
+              destroyMenuButtons();
+          };
+
+          let join = templates.copy("UIButton", 300, 360);
+          join.text = "Join Match";
+          join.onclick = () => {
+              // Remove or disable buttons to prevent overlap
+              createRed.kill = true;
+              createBlack.kill = true;
+              join.kill = true;
+
+              // Create CT.js-native textbox
+              let tb = templates.copy("Textbox", 300, 360);
+              tb.placeholder = "Enter Match ID";
+              tb.maxLength = 40;
+              tb.focus();
+
+              // Optional: console log as player types
+              tb.onTextChange = () => {
+                  console.log("Current text:", tb.text);
+              };
+
+              // Add a submit button next to it
+              let submitBtn = templates.copy("UIButton", 500, 360);
+              submitBtn.text = "Join";
+              submitBtn.onclick = async () => {
+                  let id = tb.text.trim();
+                  if (id) {
+                      console.log("Joining match:", id);
+                      await joinMatch(id);
+                      tb.kill = true;
+                      submitBtn.kill = true;
+                  } else {
+                      console.log("No match ID entered!");
+                  }
+              };
+          };
+
+
+          window.menuButtons = [createRed, createBlack, join];
+
+          function destroyMenuButtons() {
+              window.menuButtons.forEach(btn => btn.kill = true);
+          }
+        arguments: {}
+        lib: core
     behaviors: []
     extendTypes: ''
     uid: 72J53816dDNQPr
-  - type: folder
-    uid: zgRw69JJm9MhP4
-    colorClass: act
-    icon: help-circle
-    name: New folder
-    lastmod: 1739316620526
-    entries: []
   - lastmod: 1739323385756
     type: texture
     name: bg_v2
@@ -341,13 +397,6 @@ assets:
     padding: 1
     isBlank: false
     source: /home/joshmint/Downloads/bg_v2.png
-  - type: folder
-    uid: 96M2g2HRj5F8Tq
-    colorClass: act
-    icon: help-circle
-    name: New folder
-    lastmod: 1739649766714
-    entries: []
   - lastmod: 1739650318634
     type: texture
     name: PlaceholderPiece
@@ -768,6 +817,481 @@ assets:
     uid: 8mznD8PRLmRkQg
     behaviors: []
     extendTypes: ''
+  - type: behavior
+    name: MyPiece
+    behaviorType: template
+    events:
+      - eventKey: OnCreate
+        code: this.dragging = false;
+        arguments: {}
+        lib: core
+      - eventKey: OnStep
+        code: |-
+          // Prevent execution when the tile is locked
+          // (when the victory animation starts playing)
+          if (!this.locked) {
+              // Perform movement if dragging is in process
+              if (this.dragging) {
+                  // We will record whether a tile touched other objects here
+                  var collisionResult;
+
+                  // NEW movement
+                  var targetY = pointer.y - this.relativeY;
+                  var targetX = pointer.x - this.relativeX;
+                  collisionResult = place.moveByAxes(this, targetX - this.x, targetY - this.y, 'Solid');
+
+                  // Check whether we collided with something
+                  // recording the previous collider
+                  // to play sounds on impact.
+                  if (collisionResult) {
+                      if (collisionResult) {
+                          if (this.previousCollider !== collisionResult) {
+                              sounds.play('Wood_End');
+                              this.previousCollider = collisionResult;
+                          }
+                      }
+                  } else {
+                      this.previousCollider = false;
+                  }
+
+          // OLD movement, removed from this project but parts taken out
+          /*
+                  // For vertical tiles…
+                  if (this.isVertical) {
+                      var targetY = pointer.y - this.relativeY;
+                      // We need place.moveByAxes to prevent tiles from teleporting over other objects,
+                      // and also to provide pixel-perfect collisions.
+                      collisionResult = place.moveByAxes(this, 0, targetY - this.y, 'Solid');
+                  } else {
+                      // For horizontal tiles…
+                      var targetX = pointer.x - this.relativeX;
+                      collisionResult = place.moveByAxes(this, targetX - this.x, 0, 'Solid');
+                  }
+
+                  // Check whether we collided with something
+                  // recording the previous collider
+                  // to play sounds on impact.
+                  if (collisionResult) {
+                      if (this.isVertical) {
+                          if (collisionResult.y) {
+                              if (this.previousCollider !== collisionResult.y) {
+                                  sounds.play('Wood_End');
+                                  this.previousCollider = collisionResult.y;
+                              }
+                          }
+                      } else {
+                          if (collisionResult.x) {
+                              if (this.previousCollider !== collisionResult.x) {
+                                  sounds.play('Wood_End');
+                                  this.previousCollider = collisionResult.x;
+                              }
+                          }
+                      }
+                  } else {
+                      this.previousCollider = false;
+                  }
+          */
+
+                  // Nakama multiplayer piece
+                  let data = { 'x': this.x, 'y': this.y };
+                  if (matchID) {
+                      Nakama.socket.sendMatchState(matchID, 1, data);
+                  }
+
+              }
+          }
+        arguments: {}
+        lib: core
+      - eventKey: OnPointerDown
+        code: |
+          if (this.isMovable) {
+              // Start dragging when a user presses this tile
+              this.dragging = true;
+              sounds.play('Wood_Start');
+              // Record relative position to the mouse to avoid jittery snapping to tile's center
+              this.relativeX = pointer.x - this.x;
+              this.relativeY = pointer.y - this.y;
+          }
+        arguments: {}
+        lib: core
+      - eventKey: OnPointerUp
+        code: |-
+          // Prevent execution when the tile is locked
+          // (when the victory animation starts playing)
+          if (!this.locked) {
+              // Cancel dragging on release, even if the event occured outside this tile
+              this.dragging = false;
+              // Check if we need to snap to the grid.
+              if (this.x !== this.x % 64 ||
+                  this.y !== this.y % 64
+              ) {
+                  // Smoothly move to snap to the grid
+                  tween.add({
+                      obj: this,
+                      fields: {
+                          x: Math.round(this.x / 64) * 64,
+                          y: Math.round(this.y / 64) * 64
+                      },
+                      duration: 250,
+                      silent: true
+                  });
+              }
+          }
+        arguments: {}
+        lib: core
+      - eventKey: OnPointerUpOutside
+        code: |-
+          // Prevent execution when the tile is locked
+          // (when the victory animation starts playing)
+          if (!this.locked) {
+              // Cancel dragging on release, even if the event occured outside this tile
+              this.dragging = false;
+              // Check if we need to snap to the grid.
+              if (this.x !== this.x % 64 ||
+                  this.y !== this.y % 64
+              ) {
+                  // Smoothly move to snap to the grid
+                  tween.add({
+                      obj: this,
+                      fields: {
+                          x: Math.round(this.x / 64) * 64,
+                          y: Math.round(this.y / 64) * 64
+                      },
+                      duration: 250,
+                      silent: true
+                  });
+              }
+          }
+        arguments: {}
+        lib: core
+    specification:
+      - structure: atomic
+        type: checkbox
+        mappedType: number
+        name: isMovable
+        readableName: Users can move this tile
+        required: false
+        fixedLength: 0
+    extendTypes: ''
+    lastmod: 1758937203545
+    uid: tJDmz556NkT2wp
+  - type: behavior
+    name: OpponentPiece
+    behaviorType: template
+    events:
+      - eventKey: OnCreate
+        code: this.dragging = false;
+        arguments: {}
+        lib: core
+      - eventKey: OnStep
+        code: |-
+          // Prevent execution when the tile is locked
+          // (when the victory animation starts playing)
+          if (!this.locked) {
+              // Perform movement if dragging is in process
+              if (this.dragging) {
+                  // We will record whether a tile touched other objects here
+                  var collisionResult;
+
+                  // NEW movement
+                  var targetY = pointer.y - this.relativeY;
+                  var targetX = pointer.x - this.relativeX;
+                  collisionResult = place.moveByAxes(this, targetX - this.x, targetY - this.y, 'Solid');
+
+                  // Check whether we collided with something
+                  // recording the previous collider
+                  // to play sounds on impact.
+                  if (collisionResult) {
+                      if (collisionResult) {
+                          if (this.previousCollider !== collisionResult) {
+                              sounds.play('Wood_End');
+                              this.previousCollider = collisionResult;
+                          }
+                      }
+                  } else {
+                      this.previousCollider = false;
+                  }
+
+          // OLD movement, removed from this project but parts taken out
+          /*
+                  // For vertical tiles…
+                  if (this.isVertical) {
+                      var targetY = pointer.y - this.relativeY;
+                      // We need place.moveByAxes to prevent tiles from teleporting over other objects,
+                      // and also to provide pixel-perfect collisions.
+                      collisionResult = place.moveByAxes(this, 0, targetY - this.y, 'Solid');
+                  } else {
+                      // For horizontal tiles…
+                      var targetX = pointer.x - this.relativeX;
+                      collisionResult = place.moveByAxes(this, targetX - this.x, 0, 'Solid');
+                  }
+
+                  // Check whether we collided with something
+                  // recording the previous collider
+                  // to play sounds on impact.
+                  if (collisionResult) {
+                      if (this.isVertical) {
+                          if (collisionResult.y) {
+                              if (this.previousCollider !== collisionResult.y) {
+                                  sounds.play('Wood_End');
+                                  this.previousCollider = collisionResult.y;
+                              }
+                          }
+                      } else {
+                          if (collisionResult.x) {
+                              if (this.previousCollider !== collisionResult.x) {
+                                  sounds.play('Wood_End');
+                                  this.previousCollider = collisionResult.x;
+                              }
+                          }
+                      }
+                  } else {
+                      this.previousCollider = false;
+                  }
+          */
+
+                  // Nakama multiplayer piece
+                  let data = { 'x': this.x, 'y': this.y };
+                  if (matchID) {
+                      Nakama.socket.sendMatchState(matchID, 1, data);
+                  }
+
+              }
+          }
+        arguments: {}
+        lib: core
+      - eventKey: OnPointerDown
+        code: |
+          if (this.isMovable) {
+              // Start dragging when a user presses this tile
+              this.dragging = true;
+              sounds.play('Wood_Start');
+              // Record relative position to the mouse to avoid jittery snapping to tile's center
+              this.relativeX = pointer.x - this.x;
+              this.relativeY = pointer.y - this.y;
+          }
+        arguments: {}
+        lib: core
+      - eventKey: OnPointerUp
+        code: |-
+          // Prevent execution when the tile is locked
+          // (when the victory animation starts playing)
+          if (!this.locked) {
+              // Cancel dragging on release, even if the event occured outside this tile
+              this.dragging = false;
+              // Check if we need to snap to the grid.
+              if (this.x !== this.x % 64 ||
+                  this.y !== this.y % 64
+              ) {
+                  // Smoothly move to snap to the grid
+                  tween.add({
+                      obj: this,
+                      fields: {
+                          x: Math.round(this.x / 64) * 64,
+                          y: Math.round(this.y / 64) * 64
+                      },
+                      duration: 250,
+                      silent: true
+                  });
+              }
+          }
+        arguments: {}
+        lib: core
+      - eventKey: OnPointerUpOutside
+        code: |-
+          // Prevent execution when the tile is locked
+          // (when the victory animation starts playing)
+          if (!this.locked) {
+              // Cancel dragging on release, even if the event occured outside this tile
+              this.dragging = false;
+              // Check if we need to snap to the grid.
+              if (this.x !== this.x % 64 ||
+                  this.y !== this.y % 64
+              ) {
+                  // Smoothly move to snap to the grid
+                  tween.add({
+                      obj: this,
+                      fields: {
+                          x: Math.round(this.x / 64) * 64,
+                          y: Math.round(this.y / 64) * 64
+                      },
+                      duration: 250,
+                      silent: true
+                  });
+              }
+          }
+        arguments: {}
+        lib: core
+    specification:
+      - structure: atomic
+        type: checkbox
+        mappedType: number
+        name: isMovable
+        readableName: Users can move this tile
+        required: false
+        fixedLength: 0
+    extendTypes: ''
+    lastmod: 1758937203545
+    uid: jRDKDn4jHPtck2
+  - type: template
+    baseClass: Button
+    name: UIButton
+    depth: 0
+    texture: gP9zD5jtKH6NfD
+    playAnimationOnStart: false
+    loopAnimation: true
+    animationFPS: 30
+    visible: true
+    events:
+      - eventKey: OnPointerDown
+        code: |-
+          if (this.action && typeof this.action === 'function') {
+              this.action();
+          }
+        arguments: {}
+        lib: core
+    extends:
+      cgroup: ''
+    lastmod: 1760300375854
+    uid: P9h8Jk35LwbNhq
+    behaviors: []
+    extendTypes: ''
+    defaultText: ''
+    textStyle: -1
+    nineSliceSettings:
+      top: 16
+      left: 16
+      bottom: 16
+      right: 16
+      autoUpdate: false
+    hoverTexture: -1
+    pressedTexture: -1
+    disabledTexture: -1
+  - lastmod: 1760297096272
+    type: texture
+    name: PlaceholderUIButton
+    untill: 0
+    grid:
+      - 1
+      - 1
+    axis:
+      - 0
+      - 0
+    marginx: 0
+    marginy: 0
+    imgWidth: 64
+    imgHeight: 64
+    width: 64
+    height: 64
+    offx: 0
+    offy: 0
+    origname: igP9zD5jtKH6NfD.png
+    shape: rect
+    left: 0
+    right: 64
+    top: 0
+    bottom: 64
+    uid: gP9zD5jtKH6NfD
+    padding: 1
+    isBlank: false
+  - type: template
+    baseClass: TextBox
+    name: Textbox
+    depth: 0
+    texture: mKLtB3qpTwp9w6
+    playAnimationOnStart: false
+    loopAnimation: true
+    animationFPS: 30
+    visible: true
+    events: []
+    extends:
+      cgroup: ''
+    lastmod: 1760303264100
+    uid: PfHFf3kHktG5qM
+    behaviors: []
+    extendTypes: ''
+    defaultText: ''
+    textStyle: m4w6nDTPn3TC8L
+    nineSliceSettings:
+      top: 16
+      left: 16
+      bottom: 16
+      right: 16
+      autoUpdate: false
+    hoverTexture: -1
+    pressedTexture: -1
+    disabledTexture: -1
+    fieldType: text
+    maxTextLength: 0
+    useBitmapText: false
+  - lastmod: 1760300478570
+    type: texture
+    name: TextInput
+    untill: 0
+    grid:
+      - 1
+      - 1
+    axis:
+      - 0
+      - 0
+    marginx: 0
+    marginy: 0
+    imgWidth: 128
+    imgHeight: 64
+    width: 128
+    height: 64
+    offx: 0
+    offy: 0
+    origname: imKLtB3qpTwp9w6.png
+    shape: rect
+    left: 0
+    right: 128
+    top: 0
+    bottom: 64
+    uid: mKLtB3qpTwp9w6
+    padding: 1
+    isBlank: false
+  - type: style
+    name: Frutiger
+    uid: m4w6nDTPn3TC8L
+    typeface: jgWRTg6FGrmPKC
+    font:
+      family: sans-serif
+      halign: left
+      italic: false
+      size: 36
+      weight: '800'
+      wrap: false
+      wrapPosition: 640
+      lineHeight: 48
+    fill:
+      type: 0
+      color: '#ffffff'
+      color1: '#cccccc'
+      color2: '#ffffff'
+      gradtype: 1
+    lastmod: 1760303754797
+    shadow:
+      color: '#000000'
+      x: 0
+      'y': 0
+      blur: 3
+  - name: Frutiger
+    type: typeface
+    fonts:
+      - weight: '800'
+        italic: false
+        uid: z3B69fWqpbkgGC
+        origname: Frutiger
+    lastmod: 1760303705230
+    bitmapFont: false
+    bitmapFontSize: 16
+    bitmapFontLineHeight: 18
+    bitmapPrecision: false
+    charsets:
+      - allInFont
+    customCharset: ''
+    uid: jgWRTg6FGrmPKC
 globalVars: []
 settings:
   authoring:
